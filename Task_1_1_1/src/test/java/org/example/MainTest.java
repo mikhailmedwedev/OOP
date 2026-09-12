@@ -6,6 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 public class MainTest {
 
     @Test
+    void testMainMethod() {
+        Main.main(new String[] {});
+    }
+
+    @Test
     public void testEmptyArray() {
         int[] input = {};
         int[] expected = {};
