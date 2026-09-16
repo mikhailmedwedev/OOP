@@ -3,50 +3,45 @@ package org.example;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-public class MainTest {
+class MainTest {
 
     @Test
-    void testMainMethod() {
-        Main.main(new String[] {});
-    }
-
-    @Test
-    public void testEmptyArray() {
+    void emptyArray() {
         int[] input = {};
         int[] expected = {};
 
-        int[] actual = Main.heapsort(input);
+        Heap.sort(input);
 
-        assertArrayEquals(expected, actual);
+        assertArrayEquals(expected, input);
     }
 
     @Test
-    public void testAlreadySortedArray() {
+    void alreadySortedArray() {
         int[] input = {1, 2, 3, 4, 5};
         int[] expected = {1, 2, 3, 4, 5};
 
-        int[] actual = Main.heapsort(input);
+        Heap.sort(input);
 
-        assertArrayEquals(expected, actual);
+        assertArrayEquals(expected, input);
     }
 
     @Test
-    public void testSingleElementArray() {
+    void singleElementArray() {
         int[] input = {10};
         int[] expected = {10};
 
-        int[] actual = Main.heapsort(input);
+        Heap.sort(input);
 
-        assertArrayEquals(expected, actual);
+        assertArrayEquals(expected, input);
     }
 
     @Test
-    public void testWithDuplicatesAndNegatives() {
+    void withDuplicatesAndNegatives() {
         int[] input = {-5, 3, 3, 8, 0, -5, 12, 5};
         int[] expected = {-5, -5, 0, 3, 3, 5, 8, 12};
 
-        int[] actual = Main.heapsort(input);
+        Heap.sort(input);
 
-        assertArrayEquals(expected, actual);
+        assertArrayEquals(expected, input);
     }
 }
