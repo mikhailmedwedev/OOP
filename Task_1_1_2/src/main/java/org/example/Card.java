@@ -23,6 +23,6 @@ public class Card {
 
     @Override
     public String toString() {
-        return rank.getDisplayName() + " (" + suit.getDisplayName() + ")";
+        return suit.getDisplayName() + " " + rank.getDisplayName() + " (" + rank.getValue() + ")";
     }
 }

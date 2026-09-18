@@ -1,8 +1,8 @@
 package org.example;
 
 public enum Suit {
-    SPADES("Пиковая"), HEARTS("Червы"),
-    DIAMONDS("Бубновый"), CLUBS("Трефы");
+    SPADES("Пики"), HEARTS("Червы"),
+    DIAMONDS("Буби"), CLUBS("Трефы");
 
     private final String displayName;
     Suit(String displayName) {

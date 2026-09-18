@@ -1,6 +1,5 @@
 package org.example;
 
-import java.util.Locale;
 import java.util.Scanner;
 
 public class BlackJackGame {
@@ -9,17 +8,21 @@ public class BlackJackGame {
     private final Dealer dealer;
     private final Scanner scanner;
     private int roundCount;
+    private int playerScore;
+    private int dealerScore;
 
     public BlackJackGame(String playerName) {
         this.deck = new Deck();
         this.player = new Player(playerName);
         this.dealer = new Dealer();
         this.scanner = new Scanner(System.in);
-        roundCount = 0;
+        this.roundCount = 0;
+        this.playerScore = 0;
+        this.dealerScore = 0;
     }
 
     public void start() {
-        System.out.println("=== Добро пожаловать в BlackJack! ===");
+        System.out.print("=== Добро пожаловать в BlackJack! ===");
         deck.shuffle();
 
         boolean keepPlaying = true;
@@ -43,9 +46,9 @@ public class BlackJackGame {
         player.receiveCard(deck.drawCard());
         dealer.receiveCard(deck.drawCard());
 
-        System.out.println("\n---Раунд " + roundCount + " ---");
-        System.out.println(player);
-        System.out.println(dealer.getName() + " показывает: [" + dealer.getHand().getCards().get(0) + ", <скрытая карта>]");
+        System.out.println("\nРаунд " + roundCount);
+        System.out.println("Дилер раздал карты");
+        printHandsStateWithHiddenCard();
 
         playerTurn();
 
@@ -57,65 +60,72 @@ public class BlackJackGame {
     }
 
     private void playerTurn() {
+        System.out.println("\nВаш ход");
+        System.out.println("-------");
+
         while (!player.isBust()) {
-            System.out.print("\nВведите \"1\", чтобы взять карту, или \"0\", чтобы остановиться: ");
+            System.out.println("Введите \"1\", чтобы взять карту, или \"0\", чтобы остановиться... ");
             String choice = scanner.nextLine().trim();
 
             if (choice.equals("1")) {
                 Card drawnCard = deck.drawCard();
                 player.receiveCard(drawnCard);
-                System.out.println("Вы вытянули: " + drawnCard);
-                System.out.println(player);
+
+                System.out.println("Вы открыли карту " + drawnCard);
+                printHandsStateWithHiddenCard();
+                System.out.println();
             }
             else if (choice.equals("0")) {
                 break;
             }
-
-        }
-
-        if (player.isBust()) {
-            System.out.println("Перебор! Вы проиграли этот раунд.");
         }
     }
 
     private void dealerTurn() {
-        System.out.println("\n--- Ход Дилера ---");
-        System.out.println(dealer);
+        System.out.println("\nХод дилера");
+        System.out.println("-------");
+
+        Card hiddenCard = dealer.getHand().getCards().get(1);
+        System.out.println("Дилер открывает закрытую карту " + hiddenCard);
+        printHandsStateWithOpenCards();
 
         while (dealer.shouldHit()) {
             Card drawnCard = deck.drawCard();
             dealer.receiveCard(drawnCard);
-            System.out.println("Дилер открывает карту: " + drawnCard);
-            System.out.println(dealer);
-        }
-
-        if (dealer.isBust()) {
-            System.out.println("У дилера перебор");
+            System.out.println("\nДилер открывает карту " + drawnCard);
+            printHandsStateWithOpenCards();
         }
     }
 
     private void determineWinner() {
-        System.out.println("\n=== Итоги раунда " + roundCount + " ===");
-        System.out.println(player);
-        System.out.println(dealer);
-
-        int playerScore = player.getScore();
-        int dealerScore = dealer.getScore();
+        System.out.println();
+        int pScore = player.getScore();
+        int dScore = dealer.getScore();
 
         if (player.isBust()) {
-            System.out.println("Победил Дилер!");
-        }
+            dealerScore++;
+            System.out.println("Перебор! Вы проиграли этот раунд. Счет " + playerScore + ":" + dealerScore + " в пользу дилера.");        }
         else if (dealer.isBust()) {
-            System.out.println("Поздравляем! Вы победили!");
+            dealerScore++;
+            System.out.println("Вы выиграли раунд! Счет " + playerScore + ":" + dealerScore + " в вашу пользу.");        }
+        else if (pScore > dScore) {
+            playerScore++;
+            System.out.println("Вы выиграли раунд! Счет " + playerScore + ":" + dealerScore + " в вашу пользу.");
         }
-        else if (playerScore > dealerScore) {
-            System.out.println("Поздравляем! Вы победили по очкам!");
-        }
-        else if (dealerScore > playerScore) {
-            System.out.println("Победил Дилер по очкам!");
-        }
+        else if (dScore > pScore) {
+            dealerScore++;
+            System.out.println("Дилер выиграл раунд. Счет " + playerScore + ":" + dealerScore + " в пользу дилера.");        }
         else {
-            System.out.println("Ничья!");
-        }
+            System.out.println("Ничья! Счет " + playerScore + ":" + dealerScore + ".");        }
+    }
+
+    private void printHandsStateWithHiddenCard() {
+        System.out.println("    Ваши карты: " + player.getHand().getCards() + " => " + player.getScore());
+        System.out.println("    Карты дилера: [" + dealer.getHand().getCards().get(0) + ", <закрытая карта>]");
+    }
+
+    private void printHandsStateWithOpenCards() {
+        System.out.println("    Ваши карты: " + player.getHand().getCards() + " => " + player.getScore());
+        System.out.println("    Карты дилера: " + dealer.getHand().getCards() + " => " + dealer.getScore());
     }
 }
