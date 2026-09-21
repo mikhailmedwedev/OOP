@@ -151,15 +151,19 @@ public class BlackJackGame {
      * Выводит текущий набор карт у участников со скрытой второй картой дилера.
      */
     private void printHandsStateWithHiddenCard() {
-        System.out.println("    Ваши карты: " + player.getHand().getCards() + " => " + player.getScore());
-        System.out.println("    Карты дилера: [" + dealer.getHand().getCards().get(0) + ", <закрытая карта>]");
+        System.out.println("    Ваши карты: " + player.getHand().getCards()
+                + " => " + player.getScore());
+        System.out.println("    Карты дилера: [" + dealer.getHand().getCards().get(0)
+                + ", <закрытая карта>]");
     }
 
     /**
      * Выводит текущий набор карт у участников со всеми открытыми картами.
      */
     private void printHandsStateWithOpenCards() {
-        System.out.println("    Ваши карты: " + player.getHand().getCards() + " => " + player.getScore());
-        System.out.println("    Карты дилера: " + dealer.getHand().getCards() + " => " + dealer.getScore());
+        System.out.println("    Ваши карты: " + player.getHand().getCards()
+                + " => " + player.getScore());
+        System.out.println("    Карты дилера: " + dealer.getHand().getCards()
+                + " => " + dealer.getScore());
     }
 }
