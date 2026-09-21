@@ -14,9 +14,9 @@ public class Dealer extends Participant {
     }
 
     /**
-     * Проверяет, должен ли дилер добирать карты (очки < 17).
+     * Проверяет, должен ли дилер добирать карты (очки меньше 17).
      *
-     * @return true, если очков < 17; false, если очков >= 17
+     * @return true, если очков меньше 17; false, если очков больше или равно 17
      */
     public boolean shouldHit() {
         return getScore() < 17;
