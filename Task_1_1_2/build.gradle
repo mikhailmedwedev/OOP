@@ -24,12 +24,10 @@ jacocoTestReport {
     reports {
         xml.required = true
     }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['**/Main.class', '**/BlackJackGame.class'])
+        }))
+    }
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
-
-tasks.withType(JavaExec) {
-    defaultCharacterEncoding = 'UTF-8'
-}

@@ -128,19 +128,27 @@ public class BlackJackGame {
 
         if (player.isBust()) {
             dealerScore++;
-            System.out.println("Перебор! Вы проиграли этот раунд. Счет " + playerScore + ":" + dealerScore + " в пользу дилера.");        }
+            System.out.println("Перебор! Вы проиграли этот раунд. Счет " + playerScore + ":"
+                    + dealerScore + " в пользу дилера.");
+        }
         else if (dealer.isBust()) {
             playerScore++;
-            System.out.println("У дилера перебор! Вы выиграли раунд! Счет " + playerScore + ":" + dealerScore + " в вашу пользу.");        }
+            System.out.println("У дилера перебор! Вы выиграли раунд! Счет " + playerScore + ":"
+                    + dealerScore + " в вашу пользу.");
+        }
         else if (playerHandScore > dealerHandScore) {
             playerScore++;
-            System.out.println("Вы выиграли раунд! Счет " + playerScore + ":" + dealerScore + " в вашу пользу.");
+            System.out.println("Вы выиграли раунд! Счет " + playerScore + ":"
+                    + dealerScore + " в вашу пользу.");
         }
         else if (dealerHandScore > playerHandScore) {
             dealerScore++;
-            System.out.println("Дилер выиграл раунд. Счет " + playerScore + ":" + dealerScore + " в пользу дилера.");        }
+            System.out.println("Дилер выиграл раунд. Счет " + playerScore + ":"
+                    + dealerScore + " в пользу дилера.");
+        }
         else {
-            System.out.println("Ничья! Счет " + playerScore + ":" + dealerScore + ".");        }
+            System.out.println("Ничья! Счет " + playerScore + ":" + dealerScore + ".");
+        }
     }
 
     /**
