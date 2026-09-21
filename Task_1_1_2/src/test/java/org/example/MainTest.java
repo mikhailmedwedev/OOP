@@ -61,4 +61,45 @@ public class MainTest {
 
         assertFalse(dealer.shouldHit());
     }
+
+    @Test
+    void deckOperations() {
+        Deck deck = new Deck();
+        assertEquals(52, deck.cardsLeft());
+
+        Card card = deck.drawCard();
+        assertNotNull(card);
+        assertEquals(51, deck.cardsLeft());
+
+        deck.reset();
+        assertEquals(52, deck.cardsLeft());
+    }
+
+    @Test
+    void playerAndParticipantMethods() {
+        Player player = new Player("Тестовый Игрок");
+        assertEquals("Тестовый Игрок", player.getName());
+
+        Card card = new Card(Suit.HEARTS, Rank.ACE);
+        assertEquals(Suit.HEARTS, card.getSuit());
+        assertEquals(Rank.ACE, card.getRank());
+        assertEquals(11, card.getValue());
+
+        player.receiveCard(card);
+        assertFalse(player.getHand().getCards().isEmpty());
+        assertEquals(11, player.getScore());
+
+        player.resetHand();
+        assertTrue(player.getHand().getCards().isEmpty());
+    }
+
+    @Test
+    void handClearAndToString() {
+        Hand hand = new Hand();
+        hand.addCard(new Card(Suit.CLUBS, Rank.FIVE));
+        assertNotNull(hand.toString());
+
+        hand.clear();
+        assertEquals(0, hand.getScore());
+    }
  }

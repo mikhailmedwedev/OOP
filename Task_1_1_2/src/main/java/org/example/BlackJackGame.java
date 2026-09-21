@@ -123,8 +123,8 @@ public class BlackJackGame {
      */
     private void determineWinner() {
         System.out.println();
-        int pScore = player.getScore();
-        int dScore = dealer.getScore();
+        int playerHandScore = player.getScore();
+        int dealerHandScore = dealer.getScore();
 
         if (player.isBust()) {
             dealerScore++;
@@ -132,11 +132,11 @@ public class BlackJackGame {
         else if (dealer.isBust()) {
             playerScore++;
             System.out.println("У дилера перебор! Вы выиграли раунд! Счет " + playerScore + ":" + dealerScore + " в вашу пользу.");        }
-        else if (pScore > dScore) {
+        else if (playerHandScore > dealerHandScore) {
             playerScore++;
             System.out.println("Вы выиграли раунд! Счет " + playerScore + ":" + dealerScore + " в вашу пользу.");
         }
-        else if (dScore > pScore) {
+        else if (dealerHandScore > playerHandScore) {
             dealerScore++;
             System.out.println("Дилер выиграл раунд. Счет " + playerScore + ":" + dealerScore + " в пользу дилера.");        }
         else {
