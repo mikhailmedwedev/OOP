@@ -2,6 +2,10 @@ package org.example;
 
 import java.util.Scanner;
 
+/**
+ * Управляющий класс игры.
+ * Игровой цикл, взаимодействие с пользователем через консоль и подсчет очков.
+ */
 public class BlackJackGame {
     private final Deck deck;
     private final Player player;
@@ -11,6 +15,11 @@ public class BlackJackGame {
     private int playerScore;
     private int dealerScore;
 
+    /**
+     * Инициализация игры с указаннмым именем игрока.
+     *
+     * @param playerName имя игрока
+     */
     public BlackJackGame(String playerName) {
         this.deck = new Deck();
         this.player = new Player(playerName);
@@ -21,6 +30,9 @@ public class BlackJackGame {
         this.dealerScore = 0;
     }
 
+    /**
+     * Запускает главный цикл игры.
+     */
     public void start() {
         System.out.print("=== Добро пожаловать в BlackJack! ===");
         deck.shuffle();
@@ -36,6 +48,9 @@ public class BlackJackGame {
         System.out.println("Спасибо за игру!");
     }
 
+    /**
+     * Один раунд игры: раздача карт, ход игрока, ход дилера и определение победителя.
+     */
     private void playRound() {
         roundCount++;
         player.resetHand();
@@ -59,6 +74,9 @@ public class BlackJackGame {
         determineWinner();
     }
 
+    /**
+     * Ход игрока.
+     */
     private void playerTurn() {
         System.out.println("\nВаш ход");
         System.out.println("-------");
@@ -81,6 +99,9 @@ public class BlackJackGame {
         }
     }
 
+    /**
+     * Ход дилера.
+     */
     private void dealerTurn() {
         System.out.println("\nХод дилера");
         System.out.println("-------");
@@ -97,6 +118,9 @@ public class BlackJackGame {
         }
     }
 
+    /**
+     * Определяет победителя раунда и обновляет счетчик сессии игры.
+     */
     private void determineWinner() {
         System.out.println();
         int pScore = player.getScore();
@@ -106,8 +130,8 @@ public class BlackJackGame {
             dealerScore++;
             System.out.println("Перебор! Вы проиграли этот раунд. Счет " + playerScore + ":" + dealerScore + " в пользу дилера.");        }
         else if (dealer.isBust()) {
-            dealerScore++;
-            System.out.println("Вы выиграли раунд! Счет " + playerScore + ":" + dealerScore + " в вашу пользу.");        }
+            playerScore++;
+            System.out.println("У дилера перебор! Вы выиграли раунд! Счет " + playerScore + ":" + dealerScore + " в вашу пользу.");        }
         else if (pScore > dScore) {
             playerScore++;
             System.out.println("Вы выиграли раунд! Счет " + playerScore + ":" + dealerScore + " в вашу пользу.");
@@ -119,11 +143,17 @@ public class BlackJackGame {
             System.out.println("Ничья! Счет " + playerScore + ":" + dealerScore + ".");        }
     }
 
+    /**
+     * Выводит текущий набор карт у участников со скрытой второй картой дилера.
+     */
     private void printHandsStateWithHiddenCard() {
         System.out.println("    Ваши карты: " + player.getHand().getCards() + " => " + player.getScore());
         System.out.println("    Карты дилера: [" + dealer.getHand().getCards().get(0) + ", <закрытая карта>]");
     }
 
+    /**
+     * Выводит текущий набор карт у участников со всеми открытыми картами.
+     */
     private void printHandsStateWithOpenCards() {
         System.out.println("    Ваши карты: " + player.getHand().getCards() + " => " + player.getScore());
         System.out.println("    Карты дилера: " + dealer.getHand().getCards() + " => " + dealer.getScore());

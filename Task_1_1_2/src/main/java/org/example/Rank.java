@@ -1,5 +1,8 @@
 package org.example;
 
+/**
+ * Ранги картю
+ */
 public enum Rank {
     TWO("Двойка", 2),
     THREE("Тройка", 3),
@@ -17,15 +20,32 @@ public enum Rank {
 
     private final String displayName;
     private final int value;
+
+    /**
+     * Конструктор ранга карты.
+     *
+     * @param displayName ранг карты на русском
+     * @param value базовое количество очков
+     */
     Rank(String displayName, int value) {
         this.displayName = displayName;
         this.value = value;
     }
 
+    /**
+     * Возвращает отображаемое название ранга.
+     *
+     * @return навазние ранга
+     */
     public String getDisplayName() {
         return displayName;
     }
 
+    /**
+     * Возвращает базовое значение ранга.
+     *
+     * @return очки
+     */
     public int getValue() {
         return value;
     }
