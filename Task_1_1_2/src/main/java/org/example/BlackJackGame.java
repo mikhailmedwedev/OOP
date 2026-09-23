@@ -153,7 +153,7 @@ public class BlackJackGame {
     private void printHandsStateWithHiddenCard() {
         System.out.println("    Ваши карты: " + player.getHand().getCards()
                 + " => " + player.getScore());
-        System.out.println("    Карты дилера: [" + dealer.getHand().getCards().getFirst()
+        System.out.println("    Карты дилера: [" + dealer.getHand().getCards().get(0)
                 + ", <закрытая карта>]");
     }
 
