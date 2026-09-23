@@ -1,7 +1,7 @@
 package org.example;
 
 /**
- * Ранги картю
+ * Ранги карт.
  */
 public enum Rank {
     TWO("Двойка", 2),

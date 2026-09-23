@@ -18,7 +18,7 @@ public abstract class Participant {
     }
 
     /**
-     * Возвращает имя участникаю
+     * Возвращает имя участника.
      *
      * @return имя
      */

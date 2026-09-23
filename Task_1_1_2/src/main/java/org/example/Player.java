@@ -8,6 +8,7 @@ public class Player extends Participant {
 
     /**
      * Конструктор игрока.
+     *
      * @param name имя игрока
      */
     public Player(String name) {

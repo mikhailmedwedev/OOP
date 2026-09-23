@@ -82,7 +82,8 @@ public class BlackJackGame {
         System.out.println("-------");
 
         while (!player.isBust()) {
-            System.out.println("Введите \"1\", чтобы взять карту, или \"0\", чтобы остановиться... ");
+            System.out.println("Введите \"1\", чтобы взять карту, "
+                    + "или \"0\", чтобы остановиться... ");
             String choice = scanner.nextLine().trim();
 
             if (choice.equals("1")) {
@@ -92,8 +93,7 @@ public class BlackJackGame {
                 System.out.println("Вы открыли карту " + drawnCard);
                 printHandsStateWithHiddenCard();
                 System.out.println();
-            }
-            else if (choice.equals("0")) {
+            } else if (choice.equals("0")) {
                 break;
             }
         }
@@ -153,7 +153,7 @@ public class BlackJackGame {
     private void printHandsStateWithHiddenCard() {
         System.out.println("    Ваши карты: " + player.getHand().getCards()
                 + " => " + player.getScore());
-        System.out.println("    Карты дилера: [" + dealer.getHand().getCards().get(0)
+        System.out.println("    Карты дилера: [" + dealer.getHand().getCards().getFirst()
                 + ", <закрытая карта>]");
     }
 
