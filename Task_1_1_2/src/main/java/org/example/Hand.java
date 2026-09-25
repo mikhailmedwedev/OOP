@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,12 +27,12 @@ public class Hand {
     }
 
     /**
-     * Возвращает список карт на руках.
+     * Возвращает неизменяемый список карт на руках.
      *
-     * @return карты на руках
+     * @return неизменяемый список карт на руках
      */
     public List<Card> getCards() {
-        return cards;
+        return Collections.unmodifiableList(cards);
     }
 
     /**
