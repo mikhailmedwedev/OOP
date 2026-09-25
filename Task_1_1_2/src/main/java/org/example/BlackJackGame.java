@@ -16,7 +16,7 @@ public class BlackJackGame {
     private int dealerScore;
 
     /**
-     * Инициализация игры с указаннмым именем игрока.
+     * Инициализация игры с указанным именем игрока.
      *
      * @param playerName имя игрока
      */
@@ -65,13 +65,24 @@ public class BlackJackGame {
         System.out.println("Дилер раздал карты");
         printHandsStateWithHiddenCard();
 
+        if (player.getScore() == 21 || dealer.getScore() == 21) {
+            System.out.println();
+            printHandsStateWithOpenCards();
+            GameResult result = getGameResult(true);
+            handleRoundResult(result);
+            return;
+        }
+
         playerTurn();
 
         if (!player.isBust()) {
             dealerTurn();
         }
 
-        determineWinner();
+        System.out.println();
+        printHandsStateWithOpenCards();
+        GameResult result = getGameResult(false);
+        handleRoundResult(result);
     }
 
     /**
@@ -119,31 +130,84 @@ public class BlackJackGame {
     }
 
     /**
-     * Определяет победителя раунда и обновляет счетчик сессии игры.
+     * Определяет результат раунда.
+     *
+     * @param isRightAfterDeal флаг, указывающий, вызвана ли проверка сразу после раздачи карт
+     * @return исход раунда
      */
-    private void determineWinner() {
-        System.out.println();
-        int playerHandScore = player.getScore();
-        int dealerHandScore = dealer.getScore();
+    private GameResult getGameResult(boolean isRightAfterDeal) {
+        boolean playerHasBlackJack = player.getScore() == 21;
+        boolean dealerHasBlackJack = dealer.getScore() == 21;
+
+        if (isRightAfterDeal) {
+            if (playerHasBlackJack && dealerHasBlackJack) {
+                return GameResult.BOTH_BLACKJACK;
+            } else if (playerHasBlackJack) {
+                return GameResult.PLAYER_BLACKJACK;
+            } else if (dealerHasBlackJack) {
+                return GameResult.DEALER_BLACKJACK;
+            }
+        }
 
         if (player.isBust()) {
-            dealerScore++;
-            System.out.println("Перебор! Вы проиграли этот раунд. Счет " + playerScore + ":"
-                    + dealerScore + " в пользу дилера.");
-        } else if (dealer.isBust()) {
-            playerScore++;
-            System.out.println("У дилера перебор! Вы выиграли раунд! Счет " + playerScore + ":"
-                    + dealerScore + " в вашу пользу.");
-        } else if (playerHandScore > dealerHandScore) {
-            playerScore++;
-            System.out.println("Вы выиграли раунд! Счет " + playerScore + ":"
-                    + dealerScore + " в вашу пользу.");
-        } else if (dealerHandScore > playerHandScore) {
-            dealerScore++;
-            System.out.println("Дилер выиграл раунд. Счет " + playerScore + ":"
-                    + dealerScore + " в пользу дилера.");
+            return GameResult.PLAYER_BUST;
+        }
+        if (dealer.isBust()) {
+            return GameResult.DEALER_BUST;
+        }
+
+        if (player.getScore() > dealer.getScore()) {
+            return GameResult.PLAYER_WIN;
+        } else if (dealer.getScore() > player.getScore()) {
+            return GameResult.DEALER_WIN;
         } else {
-            System.out.println("Ничья! Счет " + playerScore + ":" + dealerScore + ".");
+            return GameResult.DRAW;
+        }
+    }
+
+    /**
+     * Обновляет счет игры и выводит сообщение о результате раунда.
+     *
+     * @param roundResult исход раунда
+     */
+    private void handleRoundResult(GameResult roundResult) {
+        System.out.println();
+
+        switch (roundResult) {
+            case PLAYER_BLACKJACK -> {
+                playerScore++;
+                System.out.println("У вас блэкджек! Вы выиграли раунд! Счет "
+                        + playerScore + ":" + dealerScore + ".");
+            }
+            case DEALER_BLACKJACK -> {
+                dealerScore++;
+                System.out.println("У дилера блэкджек! Дилер выиграл раунд. Счет "
+                        + playerScore + ":" + dealerScore + ".");
+            }
+            case BOTH_BLACKJACK -> System.out.println("У обоих Блэкджек! Ничья! Счет "
+                        + playerScore + ":" + dealerScore + ".");
+            case PLAYER_BUST -> {
+                dealerScore++;
+                System.out.println("Перебор! Вы проиграли этот раунд. Счет "
+                        + playerScore + ":" + dealerScore + ".");
+            }
+            case DEALER_BUST -> {
+                playerScore++;
+                System.out.println("У дилера перебор! Вы выиграли раунд! Счет "
+                        + playerScore + ":" + dealerScore + ".");
+            }
+            case PLAYER_WIN -> {
+                playerScore++;
+                System.out.println("Вы выиграли раунд по очкам! Счет "
+                        + playerScore + ":" + dealerScore + ".");
+            }
+            case DEALER_WIN -> {
+                dealerScore++;
+                System.out.println("Дилер выиграл раунд по очкам. Счет "
+                        + playerScore + ":" + dealerScore + ".");
+            }
+            case DRAW -> System.out.println("Ничья! Счет "
+                        + playerScore + ":" + dealerScore + ".");
         }
     }
 
