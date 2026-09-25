@@ -35,7 +35,7 @@ public enum Rank {
     /**
      * Возвращает отображаемое название ранга.
      *
-     * @return навазние ранга
+     * @return название ранга
      */
     public String getDisplayName() {
         return displayName;
