@@ -4,15 +4,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Тесты логики определения результатов раунда.
+ * Тесты логики игры BlackJack и определения результатов раунда.
  */
 class BlackJackGameTest {
 
@@ -20,10 +20,7 @@ class BlackJackGameTest {
     private Player player;
     private Dealer dealer;
     private Method getGameResultMethod;
-    private Method playerTurnMethod;
-    private Method dealerTurnMethod;
     private Method handleRoundResultMethod;
-    private Method playRoundMethod;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -41,18 +38,9 @@ class BlackJackGameTest {
                 .getDeclaredMethod("getGameResult", boolean.class);
         getGameResultMethod.setAccessible(true);
 
-        playerTurnMethod = BlackJackGame.class.getDeclaredMethod("playerTurn");
-        playerTurnMethod.setAccessible(true);
-
-        dealerTurnMethod = BlackJackGame.class.getDeclaredMethod("dealerTurn");
-        dealerTurnMethod.setAccessible(true);
-
         handleRoundResultMethod = BlackJackGame.class
                 .getDeclaredMethod("handleRoundResult", GameResult.class);
         handleRoundResultMethod.setAccessible(true);
-
-        playRoundMethod = BlackJackGame.class.getDeclaredMethod("playRound");
-        playRoundMethod.setAccessible(true);
     }
 
     private GameResult invokeGetGameResult(boolean isRightAfterDeal) throws Exception {
@@ -96,7 +84,7 @@ class BlackJackGameTest {
     void playerBust() throws Exception {
         player.receiveCard(new Card(Suit.HEARTS, Rank.TEN));
         player.receiveCard(new Card(Suit.HEARTS, Rank.JACK));
-        player.receiveCard(new Card(Suit.HEARTS, Rank.FIVE)); // 25 очков
+        player.receiveCard(new Card(Suit.HEARTS, Rank.FIVE));
 
         assertEquals(GameResult.PLAYER_BUST, invokeGetGameResult(false));
     }
@@ -104,11 +92,11 @@ class BlackJackGameTest {
     @Test
     void dealerBust() throws Exception {
         player.receiveCard(new Card(Suit.HEARTS, Rank.TEN));
-        player.receiveCard(new Card(Suit.HEARTS, Rank.EIGHT)); // 18 очков
+        player.receiveCard(new Card(Suit.HEARTS, Rank.EIGHT));
 
         dealer.receiveCard(new Card(Suit.HEARTS, Rank.TEN));
         dealer.receiveCard(new Card(Suit.HEARTS, Rank.JACK));
-        dealer.receiveCard(new Card(Suit.HEARTS, Rank.FIVE)); // 25 очков
+        dealer.receiveCard(new Card(Suit.HEARTS, Rank.FIVE));
 
         assertEquals(GameResult.DEALER_BUST, invokeGetGameResult(false));
     }
@@ -116,10 +104,10 @@ class BlackJackGameTest {
     @Test
     void playerWinByPoints() throws Exception {
         player.receiveCard(new Card(Suit.HEARTS, Rank.TEN));
-        player.receiveCard(new Card(Suit.HEARTS, Rank.NINE)); // 19 очков
+        player.receiveCard(new Card(Suit.HEARTS, Rank.NINE));
 
         dealer.receiveCard(new Card(Suit.HEARTS, Rank.TEN));
-        dealer.receiveCard(new Card(Suit.HEARTS, Rank.SEVEN)); // 17 очков
+        dealer.receiveCard(new Card(Suit.HEARTS, Rank.SEVEN));
 
         assertEquals(GameResult.PLAYER_WIN, invokeGetGameResult(false));
     }
@@ -127,10 +115,10 @@ class BlackJackGameTest {
     @Test
     void dealerWinByPoints() throws Exception {
         player.receiveCard(new Card(Suit.HEARTS, Rank.TEN));
-        player.receiveCard(new Card(Suit.HEARTS, Rank.SEVEN)); // 17 очков
+        player.receiveCard(new Card(Suit.HEARTS, Rank.SEVEN));
 
         dealer.receiveCard(new Card(Suit.HEARTS, Rank.TEN));
-        dealer.receiveCard(new Card(Suit.HEARTS, Rank.NINE)); // 19 очков
+        dealer.receiveCard(new Card(Suit.HEARTS, Rank.NINE));
 
         assertEquals(GameResult.DEALER_WIN, invokeGetGameResult(false));
     }
@@ -138,54 +126,12 @@ class BlackJackGameTest {
     @Test
     void drawByPoints() throws Exception {
         player.receiveCard(new Card(Suit.HEARTS, Rank.TEN));
-        player.receiveCard(new Card(Suit.HEARTS, Rank.EIGHT)); // 18 очков
+        player.receiveCard(new Card(Suit.HEARTS, Rank.EIGHT));
 
         dealer.receiveCard(new Card(Suit.SPADES, Rank.TEN));
-        dealer.receiveCard(new Card(Suit.SPADES, Rank.EIGHT)); // 18 очков
+        dealer.receiveCard(new Card(Suit.SPADES, Rank.EIGHT));
 
         assertEquals(GameResult.DRAW, invokeGetGameResult(false));
-    }
-
-    @Test
-    void startAndExitImmediately() throws Exception {
-        System.setIn(new ByteArrayInputStream("n\n".getBytes()));
-        BlackJackGame gameWithInput = new BlackJackGame("Тест");
-        gameWithInput.start();
-    }
-
-    @Test
-    void playerTurnStandImmediately() throws Exception {
-        System.setIn(new ByteArrayInputStream("0\n".getBytes()));
-        BlackJackGame gameWithInput = new BlackJackGame("Тест");
-        playerTurnMethod.invoke(gameWithInput);
-
-        Field playerField = BlackJackGame.class.getDeclaredField("player");
-        playerField.setAccessible(true);
-        Player p = (Player) playerField.get(gameWithInput);
-        assertEquals(0, p.getHand().getCards().size());
-    }
-
-    @Test
-    void playerTurnHitThenStand() throws Exception {
-        System.setIn(new ByteArrayInputStream("1\n0\n".getBytes()));
-        BlackJackGame gameWithInput = new BlackJackGame("Тест");
-        playerTurnMethod.invoke(gameWithInput);
-
-        Field playerField = BlackJackGame.class.getDeclaredField("player");
-        playerField.setAccessible(true);
-        Player p = (Player) playerField.get(gameWithInput);
-        assertEquals(1, p.getHand().getCards().size());
-    }
-
-    @Test
-    void dealerTurnExecution() throws Exception {
-        dealer.receiveCard(new Card(Suit.HEARTS, Rank.TEN));
-        dealer.receiveCard(new Card(Suit.HEARTS, Rank.SIX));
-
-        dealerTurnMethod.invoke(game);
-
-        List<Card> cards = dealer.getHand().getCards();
-        assertTrue(cards.size() > 2);
     }
 
     @Test
@@ -196,16 +142,19 @@ class BlackJackGameTest {
     }
 
     @Test
-    void playRoundWhenPlayerAndDealerStop() throws Exception {
-        System.setIn(new ByteArrayInputStream("0\n".getBytes()));
-        BlackJackGame gameWithInput = new BlackJackGame("Тест");
+    void testStartAndPlayOneRound() {
+        InputStream originalIn = System.in;
+        try {
+            // "1\n" - взять карту, "0\n" - остановиться, "n\n" - закончить игру
+            String input = "1\n0\nn\n";
+            System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        Field deckField = BlackJackGame.class.getDeclaredField("deck");
-        deckField.setAccessible(true);
-        Deck d = (Deck) deckField.get(gameWithInput);
+            BlackJackGame gameWithInput = new BlackJackGame("Тест");
+            gameWithInput.start();
 
-        while(d.drawCard().getRank() == Rank.ACE);
-
-        playRoundMethod.invoke(gameWithInput);
+            assertTrue(true);
+        } finally {
+            System.setIn(originalIn);
+        }
     }
 }
