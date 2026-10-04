@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.Map;
+
 public class Number extends Expression {
     private final int value;
 
@@ -10,5 +12,10 @@ public class Number extends Expression {
     @Override
     public String toString() {
         return String.valueOf(value);
+    }
+
+    @Override
+    public int eval(Map<String, Integer> vars) {
+        return value;
     }
 }
