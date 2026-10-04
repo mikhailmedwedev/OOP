@@ -7,6 +7,9 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Тесты для класса Mul.
+ */
 class MulTest {
 
     @Test

@@ -7,6 +7,9 @@ import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Тесты для класса Number.
+ */
 class NumberTest {
 
     @Test

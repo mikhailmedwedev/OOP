@@ -1,12 +1,12 @@
 package org.example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Тесты для класса Expression.
+ */
 class ExpressionTest {
 
     @Test
