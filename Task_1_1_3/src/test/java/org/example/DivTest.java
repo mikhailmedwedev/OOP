@@ -36,4 +36,13 @@ class DivTest {
 
         assertEquals("(x/2)", div.toString());
     }
+
+    @Test
+    void derivativeTest() {
+        Expression expr = new Div(new Variable("x"), new Number(2));
+        Expression derX = expr.derivative("x");
+
+        assertEquals("(((1*2)-(x*0))/(2*2))", derX.toString());
+        assertEquals(0, derX.eval("x=10"));
+    }
 }

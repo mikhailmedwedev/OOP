@@ -29,4 +29,13 @@ class AddTest {
 
         assertEquals("(2+a)", add.toString());
     }
+
+    @Test
+    void derivativeTest() {
+        Expression expr = new Add(new Variable("x"), new Variable("y"));
+        Expression derX = expr.derivative("x");
+
+        assertEquals("(1+0)", derX.toString());
+        assertEquals(1, derX.eval("x=2; y=3"));
+    }
 }

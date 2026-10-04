@@ -29,4 +29,13 @@ class MulTest {
 
         assertEquals("(3*y)", mul.toString());
     }
+
+    @Test
+    void derivativeTest() {
+        Expression expr = new Mul(new Number(2), new Variable("x"));
+        Expression derX = expr.derivative("x");
+
+        assertEquals("((0*x)+(2*1))", derX.toString());
+        assertEquals(2, derX.eval("x=7"));
+    }
 }

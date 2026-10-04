@@ -24,4 +24,9 @@ public class Add extends Expression {
     public int eval(Map<String, Integer> vars) {
         return left.eval(vars) + right.eval(vars);
     }
+
+    @Override
+    public Expression derivative(String var) {
+        return new Add(left.derivative(var), right.derivative(var));
+    }
 }

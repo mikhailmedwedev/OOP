@@ -24,4 +24,12 @@ public class Mul extends Expression {
     public int eval(Map<String, Integer> vars) {
         return left.eval(vars) * right.eval(vars);
     }
+
+    @Override
+    public Expression derivative(String var) {
+        return new Add(
+                new Mul(left.derivative(var), right),
+                new Mul(left, right.derivative(var))
+        );
+    }
 }

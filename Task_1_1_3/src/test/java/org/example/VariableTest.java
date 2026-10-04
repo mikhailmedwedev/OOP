@@ -43,4 +43,18 @@ class VariableTest {
 
         assertEquals("varName", x.toString());
     }
+
+    @Test
+    void derivativeTest() {
+        Expression var = new Variable("x");
+
+        Expression derSame = var.derivative("x");
+        Expression derOther = var.derivative("y");
+
+        assertEquals("1", derSame.toString());
+        assertEquals("0", derOther.toString());
+
+        assertEquals(1, derSame.eval("x=5"));
+        assertEquals(0, derOther.eval("x=5; y=10"));
+    }
 }

@@ -37,4 +37,6 @@ public abstract class Expression {
 
         return vars;
     }
+
+    public abstract Expression derivative(String var);
 }

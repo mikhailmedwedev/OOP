@@ -18,4 +18,9 @@ public class Number extends Expression {
     public int eval(Map<String, Integer> vars) {
         return value;
     }
+
+    @Override
+    public Expression derivative(String var) {
+        return new Number(0);
+    }
 }

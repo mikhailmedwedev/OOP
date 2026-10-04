@@ -29,4 +29,12 @@ public class Variable extends Expression {
 
         return vars.get(name);
     }
+
+    @Override
+    public Expression derivative(String var) {
+        if (name.equals(var)) {
+            return new Number(1);
+        }
+        return new Number(0);
+    }
 }

@@ -24,4 +24,9 @@ public class Sub extends Expression {
     public int eval(Map<String, Integer> vars) {
         return left.eval(vars) - right.eval(vars);
     }
+
+    @Override
+    public Expression derivative(String var) {
+        return new Sub(left.derivative(var), right.derivative(var));
+    }
 }

@@ -31,4 +31,13 @@ class NumberTest {
 
         assertEquals("100", number.toString());
     }
+
+    @Test
+    void derivativeTest() {
+        Expression num = new Number(42);
+        Expression der = num.derivative("x");
+
+        assertEquals("0", der.toString());
+        assertEquals(0, der.eval("x=10"));
+    }
 }

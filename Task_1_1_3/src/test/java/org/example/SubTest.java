@@ -29,4 +29,13 @@ class SubTest {
 
         assertEquals("(x-5)", sub.toString());
     }
+
+    @Test
+    void derivativeTest() {
+        Expression expr = new Sub(new Variable("x"), new Number(5));
+        Expression derX = expr.derivative("x");
+
+        assertEquals("(1-0)", derX.toString());
+        assertEquals(1, derX.eval("x=10"));
+    }
 }
