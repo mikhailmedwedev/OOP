@@ -22,7 +22,7 @@ public class Variable extends Expression {
     }
 
     /**
-     * Возвращает имя переменной.
+     * Возвращает строковое представление переменной.
      *
      * @return имя переменной
      */
@@ -61,5 +61,25 @@ public class Variable extends Expression {
             return new Number(1);
         }
         return new Number(0);
+    }
+
+    /**
+     * Упрощает переменную.
+     *
+     * @return упрощенное выражение
+     */
+    @Override
+    public Expression simplify() {
+        return this;
+    }
+
+    /**
+     * Проверяет, содержит ли переменная переменные.
+     *
+     * @return всегда true
+     */
+    @Override
+    public boolean hasVariables() {
+        return true;
     }
 }

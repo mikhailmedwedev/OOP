@@ -1,5 +1,6 @@
 package org.example;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -57,5 +58,67 @@ public class Mul extends Expression {
                 new Mul(left.derivative(var), right),
                 new Mul(left, right.derivative(var))
         );
+    }
+
+    /**
+     * Проверяет, является ли выражение 0.
+     *
+     * @param e проверяемое выражение
+     * @return true - является 0; false - не является
+     */
+    private boolean isZero(Expression e) {
+        return e instanceof Number && ((Number) e).getValue() == 0;
+    }
+
+    /**
+     * Проверяет, является ли выражение 1.
+     *
+     * @param e проверяемое выражение
+     * @return true - является 1; false - не является
+     */
+    private boolean isOne(Expression e) {
+        return e instanceof Number && ((Number) e).getValue() == 1;
+    }
+
+    /**
+     * Проверяет, содержит ли произведение переменные.
+     *
+     * @return true, если содержит; false - иначе
+     */
+    @Override
+    public boolean hasVariables() {
+        return left.hasVariables() || right.hasVariables();
+    }
+
+    /**
+     * Упрощает произведение двух выражений.
+     * Если оба операнда не содержат переменных, вычисляет их произведение.
+     * Умножение на 0 заменяется 0.
+     * Умножение на 1 заменяется соответствующим другим операндом.
+     *
+     * @return упрощенное выражение
+     */
+    @Override
+    public Expression simplify() {
+        Expression l = left.simplify();
+        Expression r = right.simplify();
+
+        if (!l.hasVariables() && !r.hasVariables()) {
+            return new Number(l.eval(Collections.emptyMap()) * r.eval(Collections.emptyMap()));
+        }
+
+        if (isZero(l) || isZero(r)) {
+            return new Number(0);
+        }
+
+        if (isOne(l)) {
+            return r;
+        }
+
+        if (isOne(r)) {
+            return l;
+        }
+
+        return new Mul(l, r);
     }
 }

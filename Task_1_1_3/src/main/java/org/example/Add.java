@@ -1,5 +1,6 @@
 package org.example;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -27,7 +28,7 @@ public class Add extends Expression {
     /**
      * Возвращает строковое представление сложения.
      *
-     * @return строковое представления сложения
+     * @return строковое представление сложения
      */
     @Override
     public String toString() {
@@ -54,5 +55,52 @@ public class Add extends Expression {
     @Override
     public Expression derivative(String var) {
         return new Add(left.derivative(var), right.derivative(var));
+    }
+
+    /**
+     * Проверяет, является ли выражение нулем.
+     *
+     * @param e проверяемое выражение
+     * @return true - является 0; false - не является 0
+     */
+    private boolean isZero(Expression e) {
+        return e instanceof Number && ((Number) e).getValue() == 0;
+    }
+
+    /**
+     * Проверяет, содержит ли сумма переменные.
+     *
+     * @return true, если содержит; false - иначе
+     */
+    @Override
+    public boolean hasVariables() {
+        return left.hasVariables() || right.hasVariables();
+    }
+
+    /**
+     * Упрощает сумму двух выражений.
+     * Если два операнда не содержат переменных, вычисляет их сумму.
+     * Если один из операндов равен 0, возвращает другой операнд.
+     *
+     * @return упрощенное выражение
+     */
+    @Override
+    public Expression simplify() {
+        Expression l = left.simplify();
+        Expression r = right.simplify();
+
+        if (!l.hasVariables() && !r.hasVariables()) {
+            return new Number(l.eval(Collections.emptyMap()) + r.eval(Collections.emptyMap()));
+        }
+
+        if (isZero(l)) {
+            return r;
+        }
+
+        if (isZero(r)) {
+            return l;
+        }
+
+        return new Add(l, r);
     }
 }

@@ -2,6 +2,8 @@ package org.example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.util.Map;
 
@@ -59,5 +61,22 @@ class VariableTest {
 
         assertEquals(1, derSame.eval("x=5"));
         assertEquals(0, derOther.eval("x=5; y=10"));
+    }
+
+    @Test
+    void hasVariablesTest() {
+        Variable variable = new Variable("x");
+
+        assertTrue(variable.hasVariables());
+    }
+
+    @Test
+    void simplifyTest() {
+        Variable variable = new Variable("x");
+
+        Expression simplified = variable.simplify();
+
+        assertSame(variable, simplified);
+        assertEquals("x", simplified.toString());
     }
 }

@@ -28,7 +28,7 @@ public abstract class Expression {
      * Вычисляет значение выражения.
      *
      * @param vars словарь, где ключ - имя переменной, а значение - ее числовое значение
-     * @return вычисленное значение выражения.
+     * @return вычисленное значение выражения
      */
     public abstract int eval(Map<String, Integer> vars);
 
@@ -43,7 +43,7 @@ public abstract class Expression {
     }
 
     /**
-     * Разбивает строку с переменными для словаря.
+     * Преобразует строку с переменными для словаря.
      *
      * @param varsStr строка с переменными
      * @return словарь с названием переменных и их значениями
@@ -56,7 +56,7 @@ public abstract class Expression {
         Map<String, Integer> vars = new HashMap<>();
         String[] pairs = varsStr.split(";");
         for (String pair : pairs) {
-            String[] keyValue = pair.split("=");
+            String[] keyValue = pair.split("=", 2);
             if (keyValue.length == 2) {
                 String varName = keyValue[0].trim();
                 int value = Integer.parseInt(keyValue[1].trim());
@@ -74,4 +74,19 @@ public abstract class Expression {
      * @return новое выражение - производная
      */
     public abstract Expression derivative(String var);
+
+    /**
+     * Проверяет, содержит ли выражение переменные.
+     *
+     * @return true, если содержит переменные; false - иначе
+     */
+    public abstract boolean hasVariables();
+
+
+    /**
+     * Упрощает выражение, не изменяя исходное выражение.
+     *
+     * @return упрощенное выражение
+     */
+    public abstract Expression simplify();
 }

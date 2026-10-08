@@ -1,5 +1,6 @@
 package org.example;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -27,7 +28,7 @@ public class Div extends Expression {
     /**
      * Возвращает строковое представление деления.
      *
-     * @return строковое представление деления.
+     * @return строковое представление деления
      */
     @Override
     public String toString() {
@@ -65,5 +66,63 @@ public class Div extends Expression {
                 ),
                 new Mul(right, right)
         );
+    }
+
+    /**
+     * Проверяет, является ли выражение 0.
+     *
+     * @param e проверяемое выражение
+     * @return true - является 0; false - не является
+     */
+    private boolean isZero(Expression e) {
+        return e instanceof Number && ((Number) e).getValue() == 0;
+    }
+
+    /**
+     * Проверяет, является ли выражение 1.
+     *
+     * @param e проверяемое выражение
+     * @return true - является 1; false - не является
+     */
+    private boolean isOne(Expression e) {
+        return e instanceof Number && ((Number) e).getValue() == 1;
+    }
+
+    /**
+     * Проверяет, содержит ли частное переменные.
+     *
+     * @return true, если содержит; false - иначе
+     */
+    @Override
+    public boolean hasVariables() {
+        return left.hasVariables() || right.hasVariables();
+    }
+
+    /**
+     * Упрощает частное двух выражений.
+     * Если оба операнда не содержат переменных, вычисляет их частное.
+     * Деление на 0 приводит к исключению.
+     * Деление на 1 заменяется левым операндом.
+     *
+     * @return упрощенное выражение
+     */
+    @Override
+    public Expression simplify() {
+        Expression l = left.simplify();
+        Expression r = right.simplify();
+
+        if (isZero(r)) {
+            throw new ArithmeticException("Деление на 0");
+        }
+
+        if (!l.hasVariables() && !r.hasVariables()) {
+            return new Number(l.eval(Collections.emptyMap()) / r.eval(Collections.emptyMap()));
+        }
+
+        if (isOne(r)) {
+            return l;
+        }
+
+        return new Div(l, r);
     }
 }

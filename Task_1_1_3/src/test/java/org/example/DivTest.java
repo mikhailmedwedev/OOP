@@ -2,6 +2,8 @@ package org.example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 
@@ -47,5 +49,49 @@ class DivTest {
 
         assertEquals("(((1*2)-(x*0))/(2*2))", derX.toString());
         assertEquals(0, derX.eval("x=10"));
+    }
+
+    @Test
+    void hasVariables() {
+        Expression withVariables = new Div(new Variable("x"), new Number(2));
+        Expression withoutVariables = new Div(new Number(6), new Number(3));
+
+        assertTrue(withVariables.hasVariables());
+        assertFalse(withoutVariables.hasVariables());
+    }
+
+    @Test
+    void simplifyConstantOperands() {
+        Expression div = new Div(new Number(12), new Number(3));
+        Expression simplified = div.simplify();
+
+        assertEquals("4", simplified.toString());
+        assertEquals(4, simplified.eval(Map.of()));
+    }
+
+    @Test
+    void simplifyDivisionByOne() {
+        Expression div = new Div(new Variable("x"), new Number(1));
+
+        assertEquals("x", div.simplify().toString());
+    }
+
+    @Test
+    void simplifyDivisionByZeroThrowsException() {
+        Expression div = new Div(
+                new Variable("x"),
+                new Sub(new Number(5), new Number(5))
+        );
+
+        assertThrows(ArithmeticException.class, div::simplify);
+    }
+
+    @Test
+    void simplifyDoesNotModifyOriginalExpression() {
+        Expression div = new Div(new Variable("x"), new Number(1));
+        Expression simplified = div.simplify();
+
+        assertEquals("(x/1)", div.toString());
+        assertEquals("x", simplified.toString());
     }
 }

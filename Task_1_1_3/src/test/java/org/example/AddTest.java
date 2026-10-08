@@ -2,6 +2,8 @@ package org.example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 
@@ -40,5 +42,48 @@ class AddTest {
 
         assertEquals("(1+0)", derX.toString());
         assertEquals(1, derX.eval("x=2; y=3"));
+    }
+
+    @Test
+    void hasVariablesTest() {
+        Expression withVariables = new Add(new Variable("x"), new Number(2));
+        Expression withoutVariables = new Add(new Number(2), new Number(3));
+
+        assertTrue(withVariables.hasVariables());
+        assertFalse(withoutVariables.hasVariables());
+    }
+
+    @Test
+    void simplifyConstantOperands() {
+        Expression add = new Add(new Number(2), new Number(3));
+
+        Expression simplified = add.simplify();
+
+        assertEquals("5", simplified.toString());
+        assertEquals(5, simplified.eval(Map.of()));
+    }
+
+    @Test
+    void simplifyZeroLeftOperand() {
+        Expression add = new Add(new Number(0), new Variable("x"));
+
+        assertEquals("x", add.simplify().toString());
+    }
+
+    @Test
+    void simplifyZeroRightOperand() {
+        Expression add = new Add(new Variable("x"), new Number(0));
+
+        assertEquals("x", add.simplify().toString());
+    }
+
+    @Test
+    void simplifyDoesNotModifyOriginalExpression() {
+        Expression add = new Add(new Number(0), new Variable("x"));
+
+        Expression simplified = add.simplify();
+
+        assertEquals("(0+x)", add.toString());
+        assertEquals("x", simplified.toString());
     }
 }

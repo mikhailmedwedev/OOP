@@ -1,7 +1,7 @@
 package org.example;
 
 /**
- * Класс для демонстрации работы выраженийю
+ * Класс для демонстрации работы выражений.
  */
 public class Main {
 
@@ -18,6 +18,11 @@ public class Main {
 
         Expression de = e.derivative("x");
         de.print();
+
+        System.out.println();
+
+        Expression deSimplified = de.simplify();
+        deSimplified.print();
 
         System.out.println();
 

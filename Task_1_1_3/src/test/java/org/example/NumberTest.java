@@ -1,6 +1,7 @@
 package org.example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.Map;
 import java.util.Collections;
@@ -42,5 +43,29 @@ class NumberTest {
 
         assertEquals("0", der.toString());
         assertEquals(0, der.eval("x=10"));
+    }
+
+    @Test
+    void getValueTest() {
+        Number number = new Number(50);
+
+        assertEquals(50, number.getValue());
+    }
+
+    @Test
+    void hasVariablesTest() {
+        Number number = new Number(50);
+
+        assertFalse(number.hasVariables());
+    }
+
+    @Test
+    void simplifyTest() {
+        Number number = new Number(50);
+
+        Expression simplified = number.simplify();
+
+        assertEquals("50", simplified.toString());
+        assertEquals(50, simplified.eval(Collections.emptyMap()));
     }
 }

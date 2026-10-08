@@ -1,6 +1,7 @@
 package org.example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -41,5 +42,19 @@ class ExpressionTest {
         );
 
         assertEquals(40, expr.eval("x=3; y=10"));
+    }
+
+    @Test
+    void evalStringMissingVariableThrowsException() {
+        Expression expr = new Add(new Variable("x"), new Variable("y"));
+
+        assertThrows(IllegalArgumentException.class, () -> expr.eval("x=10"));
+    }
+
+    @Test
+    void evalStringInvalidFormatThrowsException() {
+        Expression expr = new Add(new Variable("x"), new Number(1));
+
+        assertThrows(IllegalArgumentException.class, () -> expr.eval("invalid"));
     }
 }

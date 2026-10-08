@@ -28,6 +28,15 @@ public class Number extends Expression {
     }
 
     /**
+     * Возвращает значение числа.
+     *
+     * @return числовое значение
+     */
+    public int getValue() {
+        return this.value;
+    }
+
+    /**
      * Вычисляет значение числа.
      *
      * @param vars словарь, где ключ - имя переменной, а значение - ее числовое значение
@@ -47,5 +56,25 @@ public class Number extends Expression {
     @Override
     public Expression derivative(String var) {
         return new Number(0);
+    }
+
+    /**
+     * Упрощает число.
+     *
+     * @return упрощенное выражение
+     */
+    @Override
+    public Expression simplify() {
+        return this;
+    }
+
+    /**
+     * Проверяет, содержит ли число переменные.
+     *
+     * @return всегда false
+     */
+    @Override
+    public boolean hasVariables() {
+        return false;
     }
 }
