@@ -27,7 +27,6 @@ public class Main {
         System.out.println();
 
         Expression expr = new Add(new Number(3), new Mul(new Number(2),
-
                 new Variable("x")));
         int result = expr.eval("x = 10; y = 13");
         System.out.println(result);
