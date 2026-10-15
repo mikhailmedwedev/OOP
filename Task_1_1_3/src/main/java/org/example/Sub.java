@@ -32,7 +32,7 @@ public class Sub extends Expression {
      */
     @Override
     public String toString() {
-        return "(" + left.toString() + "-" + right.toString() + ")";
+        return "(" + left + "-" + right + ")";
     }
 
     /**
