@@ -57,13 +57,10 @@ public class AdjacencyListGraph implements Graph {
     }
 
     public List<Integer> topologicalSort() {
-        TopologicalSort topSort = new TopologicalSort();
-
-        return topSort.topologicalSort(this);
+        return new TopologicalSort().topologicalSort(this);
     }
 
     public void readFromFile(String path) {
-        GraphFileReader gfr = new GraphFileReader();
-        gfr.readIntoGraph(path, this);
+        new GraphFileReader().readIntoGraph(path, this);
     }
 }
