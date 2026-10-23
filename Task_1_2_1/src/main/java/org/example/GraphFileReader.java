@@ -4,7 +4,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+/**
+ * Класс для чтения структуры графа из текстового файла фиксированного формата.
+ */
 public class GraphFileReader {
+
+    /**
+     * Считывает данные из файла и заполняет ими переданный граф.
+     *
+     * @param path путь к файлу
+     * @param graph экземпляр графа, в который загружается структура
+     */
     public void readIntoGraph(String path, Graph graph) {
         try (Scanner scanner = new Scanner(new File(path))) {
             int vertexCount = scanner.nextInt();

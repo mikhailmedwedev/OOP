@@ -7,7 +7,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+/**
+ * Реализация алгоритма топологической сортировки орграфа.
+ */
 public class TopologicalSort {
+
+    /**
+     * Выполняет топологическую сортировку вершин переданного графа.
+     *
+     * @param graph граф, для которого необходимо выполнить сортировку
+     * @return список вершин в порядке топологической сортировки
+     */
     public List<Integer> topologicalSort(Graph graph) {
         Map<Integer, Integer> incomingEdgesCount = new HashMap<>();
 

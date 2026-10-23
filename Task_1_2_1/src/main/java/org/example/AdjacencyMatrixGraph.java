@@ -7,11 +7,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Реализация орграфа через матрицу смежности.
+ */
 public class AdjacencyMatrixGraph implements Graph {
     private final Map<Integer, Integer> vertexToIndexInMatrix = new HashMap<>();
 
     private int[][] adjacencyMatrix = new int[0][0];
 
+    /**
+     * Добавляет вершину в граф.
+     *
+     * @param index номер вершины
+     */
     @Override
     public void addVertex(int index) {
         if (vertexToIndexInMatrix.containsKey(index)) {
@@ -30,6 +38,12 @@ public class AdjacencyMatrixGraph implements Graph {
         vertexToIndexInMatrix.put(index, matrixIndex);
     }
 
+    /**
+     * Добавляет ребро в граф.
+     *
+     * @param from номер начальной вершины.
+     * @param to номер конечной вершины.
+     */
     @Override
     public void addEdge(int from, int to) {
         if (!(vertexToIndexInMatrix.containsKey(from) && vertexToIndexInMatrix.containsKey(to))) {
@@ -41,6 +55,12 @@ public class AdjacencyMatrixGraph implements Graph {
         adjacencyMatrix[fromIndex][toIndex] = 1;
     }
 
+    /**
+     * Удаляет ребро из графа.
+     *
+     * @param from номер начальной вершины
+     * @param to номер конечной вершины
+     */
     @Override
     public void removeEdge(int from, int to) {
         if (!(vertexToIndexInMatrix.containsKey(from) && vertexToIndexInMatrix.containsKey(to))) {
@@ -52,6 +72,12 @@ public class AdjacencyMatrixGraph implements Graph {
         adjacencyMatrix[fromIndex][toIndex] = 0;
     }
 
+    /**
+     * Возвращает список смежных вершин для заданной вершины.
+     *
+     * @param index номер вершины
+     * @return список номеров соседних вершин
+     */
     @Override
     public List<Integer> getNeighbours(int index) {
         if (!vertexToIndexInMatrix.containsKey(index)) {
@@ -74,6 +100,11 @@ public class AdjacencyMatrixGraph implements Graph {
         return neighbours;
     }
 
+    /**
+     * Удаляет вершину из графа.
+     *
+     * @param index номер вершины
+     */
     @Override
     public void removeVertex(int index) {
         if (!vertexToIndexInMatrix.containsKey(index)) {
@@ -102,16 +133,31 @@ public class AdjacencyMatrixGraph implements Graph {
         }
     }
 
+    /**
+     * Возвращает общее число вершин графа.
+     *
+     * @return число вершин
+     */
     @Override
     public int getVertexCount() {
-        return adjacencyMatrix.length;
+        return vertexToIndexInMatrix.size();
     }
 
+    /**
+     * Возвращает список всех вершин графа.
+     *
+     * @return список номеров всех вершин
+     */
     @Override
     public List<Integer> getVertices() {
         return new ArrayList<>(vertexToIndexInMatrix.keySet());
     }
 
+    /**
+     * Возвращает список всех ребер.
+     *
+     * @return список всех ребер
+     */
     @Override
     public List<int[]> getEdges() {
         List<int[]> result = new ArrayList<>();
@@ -133,16 +179,31 @@ public class AdjacencyMatrixGraph implements Graph {
         return result;
     }
 
+    /**
+     * Топологическая сортировка вершин графа.
+     *
+     * @return список вершин в порядке топологической сортировки
+     */
     @Override
     public List<Integer> topologicalSort() {
         return new TopologicalSort().topologicalSort(this);
     }
 
+    /**
+     * Считывает структуру графа из файла.
+     *
+     * @param path путь к файлу
+     */
     @Override
     public void readFromFile(String path) {
         new GraphFileReader().readIntoGraph(path, this);
     }
 
+    /**
+     * Возвращает строковое представление графа.
+     *
+     * @return строка с описанием вершин и ребер графа
+     */
     @Override
     public String toString() {
         return "Vertices: " + getVertices() + "\nEdges: " + getEdges().stream()
@@ -150,6 +211,12 @@ public class AdjacencyMatrixGraph implements Graph {
                 .toList();
     }
 
+    /**
+     * Подсчитывает количество вхождений каждого ребра.
+     *
+     * @param edges список ребер
+     * @return словарь с парами: ребро - количество
+     */
     private static Map<List<Integer>, Integer> edgeCounts(List<int[]> edges) {
         Map<List<Integer>, Integer> counts = new HashMap<>();
 
@@ -161,6 +228,13 @@ public class AdjacencyMatrixGraph implements Graph {
         return counts;
     }
 
+    /**
+     * Сравнивает текущий граф с другим объектом на логическое равенство.
+     * Графы равны, если содержат одинаковый набор вершин и ребер.
+     *
+     * @param obj объект для сравнения
+     * @return true, если объекты равны, иначе false
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -175,6 +249,11 @@ public class AdjacencyMatrixGraph implements Graph {
                 && edgeCounts(getEdges()).equals(edgeCounts(other.getEdges()));
     }
 
+    /**
+     * Возвращает хэш-код графа, вычисленный на основе его вершин и ребер.
+     *
+     * @return хэш-код графа
+     */
     @Override
     public int hashCode() {
         return Objects.hash(
