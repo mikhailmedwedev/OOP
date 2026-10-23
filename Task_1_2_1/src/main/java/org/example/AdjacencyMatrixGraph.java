@@ -2,8 +2,10 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class AdjacencyMatrixGraph implements Graph {
     private final Map<Integer, Integer> vertexToIndexInMatrix = new HashMap<>();
@@ -111,6 +113,27 @@ public class AdjacencyMatrixGraph implements Graph {
     }
 
     @Override
+    public List<int[]> getEdges() {
+        List<int[]> result = new ArrayList<>();
+
+        for (Map.Entry<Integer, Integer> fromEntry : vertexToIndexInMatrix.entrySet()) {
+            int from = fromEntry.getKey();
+            int fromIndex = fromEntry.getValue();
+
+            for (Map.Entry<Integer, Integer> toEntry : vertexToIndexInMatrix.entrySet()) {
+                int to = toEntry.getKey();
+                int toIndex = toEntry.getValue();
+
+                if (adjacencyMatrix[fromIndex][toIndex] == 1) {
+                    result.add(new int[]{from, to});
+                }
+            }
+        }
+
+        return result;
+    }
+
+    @Override
     public List<Integer> topologicalSort() {
         return new TopologicalSort().topologicalSort(this);
     }
@@ -118,5 +141,45 @@ public class AdjacencyMatrixGraph implements Graph {
     @Override
     public void readFromFile(String path) {
         new GraphFileReader().readIntoGraph(path, this);
+    }
+
+    @Override
+    public String toString() {
+        return "Vertices: " + getVertices() + "\nEdges: " + getEdges().stream()
+                .map(edge -> "(" + edge[0] + ", " + edge[1] + ")")
+                .toList();
+    }
+
+    private static Map<List<Integer>, Integer> edgeCounts(List<int[]> edges) {
+        Map<List<Integer>, Integer> counts = new HashMap<>();
+
+        for (int[] edge : edges) {
+            List<Integer> key = List.of(edge[0], edge[1]);
+            counts.put(key, counts.getOrDefault(key, 0) + 1);
+        }
+
+        return counts;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof Graph other)) {
+            return false;
+        }
+
+        return new HashSet<>(getVertices()).equals(new HashSet<>(other.getVertices()))
+                && edgeCounts(getEdges()).equals(edgeCounts(other.getEdges()));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                new HashSet<>(getVertices()),
+                edgeCounts(getEdges())
+        );
     }
 }
