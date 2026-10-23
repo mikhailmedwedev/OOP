@@ -38,6 +38,12 @@ public class IncidenceMatrixGraph implements Graph {
             throw new IllegalArgumentException("Вершины нет в графе");
         }
 
+        for (int[] edge : edges) {
+            if (edge[0] == from && edge[1] == to) {
+                return;
+            }
+        }
+
         edges.add(new int[]{from, to});
         int fromIndex = vertexToIndexInMatrix.get(from);
         int toIndex = vertexToIndexInMatrix.get(to);
@@ -56,6 +62,8 @@ public class IncidenceMatrixGraph implements Graph {
         if (fromIndex != toIndex) {
             incidenceMatrix[fromIndex][edgeIndex] = -1;
             incidenceMatrix[toIndex][edgeIndex] = 1;
+        } else {
+            incidenceMatrix[fromIndex][edgeIndex] = -1;
         }
     }
 
@@ -151,6 +159,20 @@ public class IncidenceMatrixGraph implements Graph {
         int indexInMatrix = vertexToIndexInMatrix.get(index);
         for (int j = 0; j < incidenceMatrix[indexInMatrix].length; j++) {
             if (incidenceMatrix[indexInMatrix][j] == -1) {
+                boolean isLoop = true;
+
+                for (int i = 0; i < incidenceMatrix.length; i++) {
+                    if (incidenceMatrix[i][j] == 1) {
+                        isLoop = false;
+                        break;
+                    }
+                }
+
+                if (isLoop) {
+                    neighbours.add(index);
+                    continue;
+                }
+
                 for (int i = 0; i < incidenceMatrix.length; i++) {
                     if (incidenceMatrix[i][j] == 1) {
                         for (Map.Entry<Integer, Integer> entry : vertexToIndexInMatrix.entrySet()) {

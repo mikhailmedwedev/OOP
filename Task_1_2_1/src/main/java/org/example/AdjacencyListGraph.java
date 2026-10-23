@@ -23,26 +23,36 @@ public class AdjacencyListGraph implements Graph {
 
     @Override
     public void removeVertex(int index) {
+        if (!adjacencyList.containsKey(index)) {
+            throw new IllegalArgumentException("Вершины с индексом " + index + " нет в графе");
+        }
+
         adjacencyList.remove(index);
 
         for (List<Integer> neighbours : adjacencyList.values()) {
-            neighbours.remove(index);
+            neighbours.remove(Integer.valueOf(index));
         }
     }
 
     @Override
     public void addEdge(int from, int to) {
-        if (adjacencyList.containsKey(from) && adjacencyList.containsKey(to)
-                && !adjacencyList.get(from).contains(to)) {
+        if (!(adjacencyList.containsKey(from) && adjacencyList.containsKey(to))) {
+            throw new IllegalArgumentException("Вершины нет в графе");
+        }
+
+        if (!adjacencyList.get(from).contains(to)) {
             adjacencyList.get(from).add(to);
         }
     }
 
     @Override
     public void removeEdge(int from, int to) {
-        if (adjacencyList.containsKey(from) && adjacencyList.containsKey(to)
-                && adjacencyList.get(from).contains(to)) {
-            adjacencyList.get(from).remove(to);
+        if (!(adjacencyList.containsKey(from) && adjacencyList.containsKey(to))) {
+            throw new IllegalArgumentException("Вершины нет в графе");
+        }
+
+        if (adjacencyList.get(from).contains(to)) {
+            adjacencyList.get(from).remove(Integer.valueOf(to));
         }
     }
 
