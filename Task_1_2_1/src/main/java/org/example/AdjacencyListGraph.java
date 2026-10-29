@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * Реализация орграфа через список смежности.
  */
-public class AdjacencyListGraph implements Graph {
+public class AdjacencyListGraph extends AbstractGraph {
     private final Map<Integer, List<Integer>> adjacencyList;
 
     /**
@@ -169,56 +169,5 @@ public class AdjacencyListGraph implements Graph {
         return "Vertices: " + getVertices() + "\nEdges: " + getEdges().stream()
                 .map(edge -> "(" + edge[0] + ", " + edge[1] + ")")
                 .toList();
-    }
-
-    /**
-     * Подсчитывает количество вхождений каждого ребра.
-     *
-     * @param edges список ребер
-     * @return словарь с парами: ребро - количество
-     */
-    private static Map<List<Integer>, Integer> edgeCounts(List<int[]> edges) {
-        Map<List<Integer>, Integer> counts = new HashMap<>();
-
-        for (int[] edge : edges) {
-            List<Integer> key = List.of(edge[0], edge[1]);
-            counts.put(key, counts.getOrDefault(key, 0) + 1);
-        }
-
-        return counts;
-    }
-
-    /**
-     * Сравнивает текущий граф с другим объектом на логическое равенство.
-     * Графы равны, если содержат одинаковый набор вершин и ребер.
-     *
-     * @param obj объект для сравнения
-     * @return true, если объекты равны, иначе false
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-
-        if (!(obj instanceof Graph other)) {
-            return false;
-        }
-
-        return new HashSet<>(getVertices()).equals(new HashSet<>(other.getVertices()))
-                && edgeCounts(getEdges()).equals(edgeCounts(other.getEdges()));
-    }
-
-    /**
-     * Возвращает хэш-код графа, вычисленный на основе его вершин и ребер.
-     *
-     * @return хэш-код графа
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                new HashSet<>(getVertices()),
-                edgeCounts(getEdges())
-        );
     }
 }

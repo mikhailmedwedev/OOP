@@ -1,6 +1,8 @@
 package org.example;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Интерфейс, представляющий ориентированный граф.
@@ -80,4 +82,15 @@ public interface Graph {
      * @param path путь к файлу
      */
     void readFromFile(String path);
+
+    default Map<List<Integer>, Integer> edgeCounts(List<int[]> edges) {
+        Map<List<Integer>, Integer> counts = new HashMap<>();
+
+        for (int[] edge : edges) {
+            List<Integer> key = List.of(edge[0], edge[1]);
+            counts.put(key, counts.getOrDefault(key, 0) + 1);
+        }
+
+        return counts;
+    }
 }
