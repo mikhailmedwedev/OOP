@@ -24,7 +24,9 @@ public class HashTable<K, V> {
         } else {
             Node<K, V> current = buckets[index];
             while (current != null) {
-                if (key.equals(current.key)) {
+                boolean keysEqual = (key == null) ? (current.key == null) : key.equals(current.key);
+
+                if (keysEqual) {
                     current.value = value;
                     return;
                 }
@@ -38,6 +40,27 @@ public class HashTable<K, V> {
 
                 current = current.next;
             }
+        }
+    }
+
+    public V get(K key) {
+        int index = (key == null) ? 0 : Math.abs(key.hashCode()) % buckets.length;
+
+        if (buckets[index] == null) {
+            return null;
+        } else {
+            Node<K, V> current = buckets[index];
+            while (current != null) {
+                boolean keysEqual = (key == null) ? (current.key == null) : key.equals(current.key);
+
+                if (keysEqual) {
+                    return current.value;
+                }
+
+                current = current.next;
+            }
+
+            return null;
         }
     }
 
