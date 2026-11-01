@@ -64,6 +64,27 @@ public class HashTable<K, V> {
         }
     }
 
+    public boolean containsKey(K key) {
+        int index = (key == null) ? 0 : Math.abs(key.hashCode()) % buckets.length;
+
+        if (buckets[index] == null) {
+            return false;
+        } else {
+            Node<K, V> current = buckets[index];
+            while (current != null) {
+                boolean keysEqual = (key == null) ? (current.key == null) : key.equals(current.key);
+
+                if (keysEqual) {
+                    return true;
+                }
+
+                current = current.next;
+            }
+
+            return false;
+        }
+    }
+
     public static class Node<K, V> {
         private final K key;
         private V value;
