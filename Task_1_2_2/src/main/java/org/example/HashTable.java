@@ -7,6 +7,7 @@ public class HashTable<K, V> {
     Node<K, V>[] buckets;
     private int size;
     private int modCount;
+    private static final double LOAD_FACTOR = 0.75;
 
     public HashTable(int capacity) {
         this.buckets = new Node[capacity];
@@ -31,7 +32,26 @@ public class HashTable<K, V> {
         modCount++;
     }
 
+    @SuppressWarnings("unchecked")
+    private void resize() {
+        Node<K, V>[] oldBuckets = buckets;
+        buckets = new Node[oldBuckets.length * 2];
+        size = 0;
+
+        for (Node<K, V> bucket : oldBuckets) {
+            Node<K, V> current = bucket;
+            while (current != null) {
+                put(current.key, current.value);
+                current = current.next;
+            }
+        }
+    }
+
     public void put(K key, V value) {
+        if ((double) (size + 1) / buckets.length > LOAD_FACTOR) {
+            resize();
+        }
+
         int index = (key == null) ? 0 : Math.abs(key.hashCode()) % buckets.length;
 
         if (buckets[index] == null) {
