@@ -310,8 +310,8 @@ public class HashTable<K, V> implements Iterable<HashTable.Node<K, V>> {
         for (Node<K, V> bucket : buckets) {
             Node<K, V> current = bucket;
             while (current != null) {
-                if (!other.containsKey(current.key) ||
-                        !Objects.equals(current.value, other.get(current.key))) {
+                if (!other.containsKey(current.key)
+                        || !Objects.equals(current.value, other.get(current.key))) {
                     return false;
                 }
 
@@ -430,6 +430,7 @@ public class HashTable<K, V> implements Iterable<HashTable.Node<K, V>> {
 
         /**
          * Конструктор для узла.
+         *
          * @param key ключ
          * @param value значение
          * @param next ссылка на следующий узел

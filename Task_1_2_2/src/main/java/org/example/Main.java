@@ -1,6 +1,15 @@
 package org.example;
 
+/**
+ * Главный класс.
+ */
 public class Main {
+
+    /**
+     * Точка входа.
+     *
+     * @param args аргументы командной строки
+     */
     public static void main(String[] args) {
         HashTable<String, Integer> table = new HashTable<>();
 
