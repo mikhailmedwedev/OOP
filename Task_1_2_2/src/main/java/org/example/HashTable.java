@@ -85,6 +85,35 @@ public class HashTable<K, V> {
         }
     }
 
+    public void remove(K key) {
+        int index = (key == null) ? 0 : Math.abs(key.hashCode()) % buckets.length;
+
+        if (buckets[index] == null) {
+            return;
+        } else {
+            Node<K, V> current = buckets[index];
+            Node<K, V> prev = null;
+            while (current != null) {
+                boolean keysEqual = (key == null) ? (current.key == null) : key.equals(current.key);
+
+                if (keysEqual) {
+                    if (prev == null) {
+                        buckets[index] = current.next;
+                    } else {
+                        prev.next = current.next;
+                    }
+
+                    size--;
+                    modCount++;
+                    return;
+                }
+
+                prev = current;
+                current = current.next;
+            }
+        }
+    }
+
     public static class Node<K, V> {
         private final K key;
         private V value;
