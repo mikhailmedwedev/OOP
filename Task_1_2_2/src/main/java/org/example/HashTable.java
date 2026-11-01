@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class HashTable<K, V> {
     Node<K, V>[] buckets;
@@ -154,6 +155,58 @@ public class HashTable<K, V> {
 
         sb.append("}");
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null) {
+            return false;
+        }
+
+        if (!(o instanceof HashTable)) {
+            return false;
+        }
+
+        @SuppressWarnings("unchecked")
+        HashTable<Object, Object> other = (HashTable<Object, Object>) o;
+        if (this.size != other.size) {
+            return false;
+        }
+
+        for (Node<K, V> bucket : buckets) {
+            Node<K, V> current = bucket;
+            while (current != null) {
+                if (!other.containsKey(current.key) ||
+                        !Objects.equals(current.value, other.get(current.key))) {
+                    return false;
+                }
+
+                current = current.next;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 0;
+        for (Node<K, V> bucket : buckets) {
+            Node<K, V> current = bucket;
+            while (current != null) {
+                int keyHash = Objects.hashCode(current.key);
+                int valueHash = Objects.hashCode(current.value);
+                result += (keyHash ^ valueHash);
+
+                current = current.next;
+            }
+        }
+
+        return result;
     }
 
     public static class Node<K, V> {
