@@ -1,9 +1,12 @@
 package org.example;
 
 import java.util.Arrays;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
-public class HashTable<K, V> {
+public class HashTable<K, V> implements Iterable<HashTable.Node<K, V>> {
     Node<K, V>[] buckets;
     private int size;
     private int modCount;
@@ -229,6 +232,58 @@ public class HashTable<K, V> {
         return result;
     }
 
+    @Override
+    public Iterator<Node<K, V>> iterator() {
+        return new HashIterator();
+    }
+
+    private class HashIterator implements Iterator<Node<K, V>> {
+        private Node<K, V> next;
+        private Node<K, V> current;
+        private int bucketIndex;
+        private int expectedModCount;
+
+        public HashIterator() {
+            expectedModCount = modCount;
+            bucketIndex = 0;
+            current = null;
+            next = null;
+
+            if (size > 0 && buckets != null) {
+                while (bucketIndex < buckets.length && (next = buckets[bucketIndex++]) == null) {
+
+                }
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            return next != null;
+        }
+
+        @Override
+        public Node<K, V> next() {
+            if (modCount != expectedModCount) {
+                throw new ConcurrentModificationException();
+            }
+
+            if (next == null) {
+                throw new NoSuchElementException();
+            }
+
+            current = next;
+            next = current.next;
+
+            if (next == null && bucketIndex < buckets.length) {
+                while (bucketIndex < buckets.length && (next = buckets[bucketIndex++]) == null) {
+
+                }
+            }
+
+            return current;
+        }
+    }
+
     public static class Node<K, V> {
         private final K key;
         private V value;
@@ -238,6 +293,14 @@ public class HashTable<K, V> {
             this.key = key;
             this.value = value;
             this.next = next;
+        }
+
+        public K getKey() {
+            return key;
+        }
+
+        public V getValue() {
+            return value;
         }
     }
 }
