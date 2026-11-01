@@ -15,6 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Тесты для класса HashTable.
+ */
 class HashTableTest {
 
     private HashTable<String, Integer> table;
@@ -41,9 +44,12 @@ class HashTableTest {
         table.put("Key", 10);
         assertEquals(10, table.get("Key"));
 
-        table.put("Key", 20);
+        Integer oldValue = table.update("Key", 20);
+        assertEquals(10, oldValue);
         assertEquals(20, table.get("Key"));
         assertEquals(1, table.size());
+
+        assertNull(table.update("NonExistent", 50));
     }
 
     @Test
