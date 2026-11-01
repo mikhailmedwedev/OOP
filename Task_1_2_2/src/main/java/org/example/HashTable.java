@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.Arrays;
+
 public class HashTable<K, V> {
     Node<K, V>[] buckets;
     private int size;
@@ -12,6 +14,20 @@ public class HashTable<K, V> {
 
     public HashTable() {
         this(16);
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public void clear() {
+        Arrays.fill(buckets, null);
+        size = 0;
+        modCount++;
     }
 
     public void put(K key, V value) {
@@ -112,6 +128,32 @@ public class HashTable<K, V> {
                 current = current.next;
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        if (isEmpty()) {
+            return "{}";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        boolean first = true;
+
+        for (Node<K, V> bucket : buckets) {
+            Node<K, V> current = bucket;
+            while (current != null) {
+                if (!first) {
+                    sb.append(", ");
+                }
+                sb.append(current.key).append("=").append(current.value);
+                first = false;
+                current = current.next;
+            }
+        }
+
+        sb.append("}");
+        return sb.toString();
     }
 
     public static class Node<K, V> {
