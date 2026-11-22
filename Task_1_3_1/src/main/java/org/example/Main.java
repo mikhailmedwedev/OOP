@@ -7,6 +7,12 @@ import java.util.List;
  * Демонстрация примера из задания.
  */
 public class Main {
+
+    /**
+     * Запускает демонстрацию поиска подстроки в файле.
+     *
+     * @param args аргументы командной строки
+     */
     public static void main(String[] args) {
         String fileName = "input.txt";
         String searchString = "бра";
