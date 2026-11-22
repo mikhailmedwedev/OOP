@@ -1,29 +1,22 @@
 package org.example;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
- * Запускает поиск подстроки в файле.
+ * Демонстрация примера из задания.
  */
 public class Main {
-
-    /**
-     * Выводит индексы найденных вхождений.
-     *
-     * @param args имя файла и искомая подстрока
-     */
     public static void main(String[] args) {
-        if (args.length != 2) {
-            System.out.println("Не задано имя файла и искомая подстрока");
-            return;
-        }
+        String fileName = "input.txt";
+        String searchString = "бра";
 
         try {
-            System.out.println(SubstringFinder.find(args[0], args[1]));
+            List<Long> positions = FileSearcher.find(fileName, searchString);
+            System.out.println("Искомая строка: " + searchString);
+            System.out.println("Найденные позиции: " + positions);
         } catch (IOException e) {
-            System.err.println("Не удалось прочитать файл: " + e.getMessage());
-        } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
+            System.out.println("Ошибка при чтении файла: " + e.getMessage());
         }
     }
 }

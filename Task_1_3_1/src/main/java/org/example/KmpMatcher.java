@@ -1,62 +1,73 @@
 package org.example;
 
 /**
- * Ищет подстроку алгоритмом Кнута — Морриса — Пратта,
- * получая текст по одному символу Unicode.
+ * Реализует алгоритм Кнута-Морриса-Пратта для поиска подстроки.
  */
 public class KmpMatcher {
     private final int[] pattern;
-    private final int[] prefix;
-    private int matched;
+    private final int[] prefixTable;
+    private int matchedLength;
 
     /**
-     * Создаёт объект для поиска непустой подстроки.
+     * Конструктор объекта для поиска заданной строки.
      *
-     * @param substring искомая подстрока
+     * @param searchString строка, которую необходимо найти
      */
-    public KmpMatcher(String substring) {
-        if (substring.isEmpty()) {
-            throw new IllegalArgumentException("Подстрока не должна быть пустой");
+    public KmpMatcher(String searchString) {
+        if (searchString == null || searchString.isEmpty()) {
+            throw new IllegalArgumentException("Строка не может быть пустой");
         }
-        pattern = substring.codePoints().toArray();
-        prefix = buildPrefix();
+
+        pattern = searchString.codePoints().toArray();
+        prefixTable = buildPrefixTable();
+        matchedLength = 0;
     }
 
     /**
-     * Строит таблицу длин совпадающих префиксов и суффиксов.
+     * Строит таблицу префиксов для алгоритма КМП.
+     *
+     * @return массив значений таблицы префиксов
      */
-    private int[] buildPrefix() {
-        int[] result = new int[pattern.length];
-        int length = 0;
+    private int[] buildPrefixTable() {
+        int[] table = new int[pattern.length];
+
+        int matched = 0;
+
         for (int i = 1; i < pattern.length; i++) {
-            while (length > 0 && pattern[i] != pattern[length]) {
-                length = result[length - 1];
+            while (matched > 0 && pattern[i] != pattern[matched]) {
+                matched = table[matched - 1];
             }
-            if (pattern[i] == pattern[length]) {
-                length++;
+
+            if (pattern[i] == pattern[matched]) {
+                matched++;
             }
-            result[i] = length;
+
+            table[i] = matched;
         }
-        return result;
+
+        return table;
     }
 
     /**
-     * Обрабатывает следующий символ текста. Учитывает перекрывающиеся вхождения.
+     * Обрабатывает следующий кодовую точку и проверяет наличие искомой строки.
      *
-     * @param codePoint кодовая точка Unicode
-     * @return true, если на этом символе заканчивается вхождение подстроки
+     * @param codePoint кодовая точка Unicode для обработки
+     * @return true, если искомая строка найдена, иначе false
      */
-    public boolean accept(int codePoint) {
-        while (matched > 0 && codePoint != pattern[matched]) {
-            matched = prefix[matched - 1];
+    public boolean process(int codePoint) {
+        while (matchedLength > 0 && codePoint != pattern[matchedLength]) {
+            matchedLength = prefixTable[matchedLength - 1];
         }
-        if (codePoint == pattern[matched]) {
-            matched++;
+
+        if (codePoint == pattern[matchedLength]) {
+            matchedLength++;
         }
-        if (matched == pattern.length) {
-            matched = prefix[matched - 1];
+
+        if (matchedLength == pattern.length) {
+            matchedLength = prefixTable[matchedLength - 1];
             return true;
         }
+
         return false;
     }
 }
