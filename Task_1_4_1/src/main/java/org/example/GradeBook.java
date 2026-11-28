@@ -30,8 +30,17 @@ public class GradeBook {
         if (grade == null) {
             throw new IllegalArgumentException("Оценка не может быть null");
         }
+
         if (grade.getSemester() > currentSemester) {
             throw new IllegalArgumentException("Семестр оценки больше текущего семестра");
+        }
+
+        if (!isAssessmentPlanned(grade)) {
+            throw new IllegalArgumentException("Аттестация отсутствует в учебном плане");
+        }
+
+        if (hasGradeForAssessment(grade)) {
+            throw new IllegalArgumentException("Оценка за эту аттестацию уже добавлена");
         }
 
         grades.add(grade);
@@ -95,18 +104,40 @@ public class GradeBook {
         return hasExamsInPreviousSemester && hasExamsInSecondPreviousSemester;
     }
 
-    private Grade findGrade(PlannedAssessment assessment) {
-        Grade foundGrade = null;
+    private boolean isAssessmentPlanned(Grade grade) {
+        for (PlannedAssessment assessment : curriculum.getAssessments()) {
+            if (assessment.getSubjectName().equals(grade.getSubjectName())
+                    && assessment.getSemester() == grade.getSemester()
+                    && assessment.getControlType() == grade.getControlType()) {
+                return true;
+            }
+        }
 
+        return false;
+    }
+
+    private boolean hasGradeForAssessment(Grade grade) {
+        for (Grade existing : grades) {
+            if (existing.getSubjectName().equals(grade.getSubjectName())
+                    && existing.getSemester() == grade.getSemester()
+                    && existing.getControlType() == grade.getControlType()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private Grade findGrade(PlannedAssessment assessment) {
         for (Grade grade : grades) {
             if (grade.getSubjectName().equals(assessment.getSubjectName())
                     && grade.getSemester() == assessment.getSemester()
                     && grade.getControlType() == assessment.getControlType()) {
-                foundGrade = grade;
+                return grade;
             }
         }
 
-        return foundGrade;
+        return null;
     }
 
     private boolean isDiplomaAssessment(PlannedAssessment assessment) {
@@ -130,14 +161,15 @@ public class GradeBook {
     }
 
     private boolean canGetExcellentThesis() {
-        for (PlannedAssessment other : curriculum.getAssessments()) {
-            if (other.getControlType() == ControlType.THESIS) {
-                Grade assessmentGrade = findGrade(other);
-                if (assessmentGrade == null) {
-                    return other.getSemester() >= currentSemester;
-                } else {
-                    return assessmentGrade.getGradeValue() == GradeValue.EXCELLENT;
+        for (PlannedAssessment assessment : curriculum.getAssessments()) {
+            if (assessment.getControlType() == ControlType.THESIS) {
+                Grade thesisGrade = findGrade(assessment);
+
+                if (thesisGrade == null) {
+                    return assessment.getSemester() >= currentSemester;
                 }
+
+                return thesisGrade.getGradeValue() == GradeValue.EXCELLENT;
             }
         }
 
@@ -149,16 +181,17 @@ public class GradeBook {
         int excellentGrades = 0;
         int remainingGrades = 0;
 
-        for (PlannedAssessment other : curriculum.getAssessments()) {
-            if (!isDiplomaAssessment(other) || !isLastDiplomaAssessment(other)) {
+        for (PlannedAssessment assessment : curriculum.getAssessments()) {
+            if (!isDiplomaAssessment(assessment) || !isLastDiplomaAssessment(assessment)) {
                 continue;
             }
 
             totalGrades++;
 
-            Grade grade = findGrade(other);
+            Grade grade = findGrade(assessment);
+
             if (grade == null) {
-                if (other.getSemester() < currentSemester) {
+                if (assessment.getSemester() < currentSemester) {
                     return false;
                 }
 
@@ -172,6 +205,8 @@ public class GradeBook {
             }
         }
 
-        return (totalGrades > 0) && ((excellentGrades + remainingGrades) * 100 >= totalGrades * 75) && canGetExcellentThesis();
+        return totalGrades > 0
+                && (excellentGrades + remainingGrades) * 100 >= totalGrades * 75
+                && canGetExcellentThesis();
     }
 }
