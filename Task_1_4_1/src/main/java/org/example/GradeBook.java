@@ -53,4 +53,34 @@ public class GradeBook {
     public List<Grade> getGrades() {
         return List.copyOf(grades);
     }
+
+    public boolean canTransferToBudget() {
+        if (educationType == EducationType.BUDGET || currentSemester < 3) {
+            return false;
+        }
+
+        boolean hasExamGradesInPreviousSemester = false;
+        boolean hasExamGradesInSecondPreviousSemester = false;
+
+        for (Grade grade : grades) {
+            if (grade.getControlType() != ControlType.EXAM) {
+                continue;
+            }
+
+            if (grade.getSemester() == currentSemester - 1) {
+                hasExamGradesInPreviousSemester = true;
+            } else if (grade.getSemester() == currentSemester - 2) {
+                hasExamGradesInSecondPreviousSemester = true;
+            } else {
+                continue;
+            }
+
+            if (grade.getGradeValue() == GradeValue.SATISFACTORY
+                    || grade.getGradeValue() == GradeValue.UNSATISFACTORY) {
+                return false;
+            }
+        }
+
+        return hasExamGradesInPreviousSemester && hasExamGradesInSecondPreviousSemester;
+    }
 }
